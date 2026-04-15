@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Nightingale Heart</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0b1a3c;
+      color: white;
+      text-align: center;
+      font-family: Arial;
+    }
+
+    #heart-container {
+      position: relative;
+      width: 600px;
+      height: 600px;
+      margin: auto;
+    }
+
+    .heart {
+      width: 12px;
+      height: 12px;
+      background: red;
+      position: absolute;
+      transform: rotate(45deg);
+      animation: floatIn 1s ease forwards;
+    }
+
+    @keyframes floatIn {
+      from {
+        transform: translateY(-200px) scale(0.5) rotate(45deg);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0px) scale(1) rotate(45deg);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Nightingale Pledge</h1>
+<h2 id="counter">Loading...</h2>
+
+<div id="heart-container"></div>
+
+<script>
+
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8hRwzFFhZcJ_Xx-M3omXS3wmYOizYq56RAffdAYQdrNeHxvjyAFWrmXXT4gW9FYAZI-Tbt7V1AnEY/pub?output=csv";
+
+async function loadData() {
+  const response = await fetch(sheetURL);
+  const text = await response.text();
+
+  const rows = text.split("\n").slice(1);
+  const count = rows.length;
+
+  document.getElementById("counter").innerText =
+    count + " Nurses Joined";
+
+  const container = document.getElementById("heart-container");
+  container.innerHTML = "";
+
+  rows.forEach((row, i) => {
+
+    const heart = document.createElement("div");
+    heart.className = "heart";
+
+    const t = i * 0.1;
+
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y =
+      13 * Math.cos(t) -
+      5 * Math.cos(2 * t) -
+      2 * Math.cos(3 * t) -
+      Math.cos(4 * t);
+
+    const scale = 10;
+
+    heart.style.left = 300 + x * scale + "px";
+    heart.style.top = 300 - y * scale + "px";
+
+    container.appendChild(heart);
+  });
+}
+
+setInterval(loadData, 5000);
+loadData();
+
+</script>
+
+</body>
+</html>

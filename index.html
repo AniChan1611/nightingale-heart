@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Nightingale Heart</title>
+
   <style>
     body {
       margin: 0;
@@ -9,6 +10,15 @@
       color: white;
       text-align: center;
       font-family: Arial;
+    }
+
+    h1 {
+      margin-top: 20px;
+    }
+
+    #counter {
+      font-size: 28px;
+      margin-bottom: 10px;
     }
 
     #heart-container {
@@ -24,12 +34,12 @@
       background: red;
       position: absolute;
       transform: rotate(45deg);
-      animation: floatIn 1s ease forwards;
+      animation: floatIn 0.8s ease forwards;
     }
 
     @keyframes floatIn {
       from {
-        transform: translateY(-200px) scale(0.5) rotate(45deg);
+        transform: translateY(-200px) scale(0.3) rotate(45deg);
         opacity: 0;
       }
       to {
@@ -49,13 +59,20 @@
 
 <script>
 
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8hRwzFFhZcJ_Xx-M3omXS3wmYOizYq56RAffdAYQdrNeHxvjyAFWrmXXT4gW9FYAZI-Tbt7V1AnEY/pub?output=csv";
+const sheetURL = "PASTE_YOUR_CSV_LINK_HERE";
 
 async function loadData() {
   const response = await fetch(sheetURL);
   const text = await response.text();
 
-  const rows = text.split("\n").slice(1);
+  // CLEAN + ACCURATE DATA FILTER
+  const rows = text.split("\n")
+    .slice(1)
+    .filter(row => {
+      const cols = row.split(",");
+      return cols[0] && cols[0].trim() !== "";
+    });
+
   const count = rows.length;
 
   document.getElementById("counter").innerText =
@@ -69,7 +86,8 @@ async function loadData() {
     const heart = document.createElement("div");
     heart.className = "heart";
 
-    const t = i * 0.1;
+    // HEART SHAPE FORMULA ❤️
+    const t = i * 0.15;
 
     const x = 16 * Math.pow(Math.sin(t), 3);
     const y =
@@ -87,7 +105,10 @@ async function loadData() {
   });
 }
 
+// REFRESH EVERY 5 SECONDS
 setInterval(loadData, 5000);
+
+// INITIAL LOAD
 loadData();
 
 </script>
